@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACE-DRV", "$(SolutionDir)\HSR-inject\ACE-DRV\ACE-DRV.vcxproj", "{C18A2025-BBDF-427E-A186-303C11582DDC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACE-DRV", "ACE-DRV\ACE-DRV.vcxproj", "{C18A2025-BBDF-427E-A186-303C11582DDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
