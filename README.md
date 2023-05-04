@@ -1,3 +1,3 @@
 # HSR-inject
-DLL https://github.com/Z4ee/StarRail-S-GC
+ACE-DRV DLL https://github.com/Z4ee/StarRail-S-GC
 
