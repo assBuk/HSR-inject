@@ -28,7 +28,7 @@ namespace menu {
 	}
 
 	void set_speed(float speed) {
-		if (hooks::game::get_currect_phase() == RPG_BATTLE) {
+		if (Ordinal1::game::get_currect_phase() == RPG_BATTLE) {
 			set_speed_battle(speed * 5);
 			set_speed_global(1.f);
 		}
@@ -47,7 +47,7 @@ namespace menu {
 		}
 	}
 
-	void cheat_thread() {
+	void Ordinal3() {
 
 		while (!game_assembly) game_assembly = reinterpret_cast<uint64_t>(GetModuleHandleA("gameassembly.dll"));
 		while (!unity_player) unity_player = reinterpret_cast<uint64_t>(GetModuleHandleA("unityplayer.dll"));
@@ -91,7 +91,25 @@ namespace menu {
 			}
 
 			if (fps_unlock) {
-				utils::write<uint32_t>(unity_player + 0x1C4E000, 540);
+				utils::write<uint32_t>(unity_player + 0x1C4E000, 144);
+				{
+					// Получаем дескриптор процесса
+					HANDLE process_handle = GetCurrentProcess();
+
+					// Адрес, куда нужно записать функцию
+					LPVOID address = (LPVOID)0x5653C13;
+
+					// Байт-код функции
+					BYTE byte_code[] = {
+						0xC7, 0x40, 0x14, 0x05, 0x00, 0x00, 0x00, // mov [rax+14], 5
+						0x8B, 0x40, 0x14,                         // mov eax, [rax+14]
+						0x48, 0x8B, 0x7C, 0x24, 0x30,             // mov rdi, [rsp+30]
+						0xC3                                      // ret
+					};
+
+					// Записываем байт-код в память процесса
+					WriteProcessMemory(process_handle, address, byte_code, sizeof(byte_code), NULL);
+				}
 			}
 			else {
 				utils::write<uint32_t>(unity_player + 0x1C4E000, 60);
@@ -106,7 +124,7 @@ namespace menu {
 
 		Sleep(15000);
 
-		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)cheat_thread, 0, 0, 0);
+		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Ordinal3, 0, 0, 0);
 
 		puts("enable speedhack | hotkey: CAPSLOCK");
 		puts("enable peeking (: | hotkey: F5");

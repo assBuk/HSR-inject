@@ -19,7 +19,7 @@ BOOL DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		errno_t err_in = freopen_s(&file_in, "CONIN$", "r", stdin);
 
 		if (err_out == 0 || err_in == 0) {
-			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)hooks::init, 0, 0, 0);
+			CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Ordinal1::init, 0, 0, 0);
 		}
 	}
 

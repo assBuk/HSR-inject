@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 
-namespace hooks {
+namespace Ordinal1 {
 	namespace game {
 		int get_currect_phase();
 	}

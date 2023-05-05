@@ -6,14 +6,18 @@
 #include <windows.h>
 #include <iostream>
 #include <vector>
+#include <stdio.h>
+#include <Psapi.h>
+#include <TlHelp32.h>
+
 
 #include "typedef.h"
 #include "globals.h"
 
-namespace hooks {
+namespace Ordinal1 {
 	bool create_hook(HookData& data, uintptr_t GameAssembly);
 
-	namespace anti_cheat {
+	namespace ACE {
 		HANDLE WINAPI h_CreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 		{
 			if (memcmp(lpFileName, L"\\\\.\\ACE-BASE", 24) == 0) {
@@ -61,8 +65,7 @@ namespace hooks {
 	};
 
 	void init() {
-
-
+		
 		if (MH_Initialize() != MH_OK)
 		{
 			puts("Error initializing MinHook library");
@@ -70,7 +73,7 @@ namespace hooks {
 			return;
 		}
 
-		if (MH_CreateHookApiEx(L"kernelbase", "CreateFileW", &anti_cheat::h_CreateFileW, reinterpret_cast<void**>(&p_CreateFileW), reinterpret_cast<void**>(&t_CreateFileW)) != MH_OK)
+		if (MH_CreateHookApiEx(L"kernelbase", "CreateFileW", &ACE::h_CreateFileW, reinterpret_cast<void**>(&p_CreateFileW), reinterpret_cast<void**>(&t_CreateFileW)) != MH_OK)
 		{
 			puts("Error creating hook for CreateFileW function");
 
@@ -83,7 +86,7 @@ namespace hooks {
 
 			return;
 		}
-
+		Sleep(5000); // пауза в 5 секунд
 		puts("waiting game module..");
 
 		uintptr_t base_address = 0;
@@ -100,14 +103,60 @@ namespace hooks {
 
 		for (auto& hook : v_hooks) {
 			if (!create_hook(hook, base_address)) {
+				//Sleep(8000);
 				return;
 			}
 		}
 
-		puts("hooks successfully created!");
+		puts("hooks successfully created!\n\n");
 
-		menu::menu();
+		//Sleep(8000);
+						const wchar_t* processName = L"StarRail.exe";const wchar_t* dllName = L"ACE-DRV64.dll";const wchar_t* dll1Name = L"Astrolabe.dll";const wchar_t* log = L"APMGameLog.db";
+				DWORD processId = 0;HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+				if (hSnapshot != INVALID_HANDLE_VALUE) {PROCESSENTRY32 pe32 = { 0 };pe32.dwSize = sizeof(PROCESSENTRY32);
+					if (Process32First(hSnapshot, &pe32)) {
+						do {
+							if (_wcsicmp(pe32.szExeFile, processName) == 0) {processId = pe32.th32ProcessID;break;}} while (Process32Next(hSnapshot, &pe32));}CloseHandle(hSnapshot);
+				}
+				if (processId != 0) {HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+					if (hProcess != NULL) {HMODULE hModule = NULL;MODULEENTRY32 me32 = { 0 };me32.dwSize = sizeof(MODULEENTRY32);HANDLE hModuleSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, processId);
+						if (hModuleSnapshot != INVALID_HANDLE_VALUE) {
+							if (Module32First(hModuleSnapshot, &me32)) {do {if (_wcsicmp(me32.szModule, dllName) == 0 || _wcsicmp(me32.szModule, dll1Name) == 0) {hModule = me32.hModule;break;}}
+								while (Module32Next(hModuleSnapshot, &me32));}CloseHandle(hModuleSnapshot);}
+            if (hModule != NULL) {
+                FARPROC pfnFreeLibrary = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "FreeLibrary");
+                HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pfnFreeLibrary, hModule, 0, NULL);
+                if (hThread != NULL) {
+                    DWORD dwWaitResult = WaitForSingleObject(hThread, 500);
+                    if (dwWaitResult == WAIT_OBJECT_0) {
+                        wprintf(L"Module %s\n"
+								"Module %s\n ""From Proc %s (PID %d).\n\n", dllName, dll1Name, processName, processId);
+                    } else if (dwWaitResult == WAIT_TIMEOUT) {
+                        wprintf(L"Failed to unload module %s or %s from process %s (PID %d) due to timeout.\n\n", dllName, dll1Name, processName, processId);
+                    } else {
+                        wprintf(L"Failed to unload module %s or %s from process %s (PID %d) due to unknown error.\\n", dllName, dll1Name, processName, processId);
+                    }
+                    CloseHandle(hThread);
+                } else {
+                    wprintf(L"Failed to create remote thread in process %s (PID %d).\n\n", processName, processId);
+                }
+            } else {
+                wprintf(L"Module %s or %s not found in process %s (PID %d).\n\n", dllName, dll1Name, processName, processId);
+            }
+            CloseHandle(hProcess);
+        } else {
+            wprintf(L"Failed to open process %s (PID %d).\n\n", processName, processId);
+        }
+    } else {
+        wprintf(L"Process %s not found.\n\n", processName);
+    }
+    if (DeleteFile(log)) {
+        wprintf(L"File %s deleted.\n\n", log);
+    } else {
+        wprintf(L"Failed to delete file %s.\n\n", log);
+    }
 
+			menu::menu();
 		return;
 	}
 
