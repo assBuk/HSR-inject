@@ -27,7 +27,7 @@
     "rider.external.source.directories": [
       "%userprofile%\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
       "%userprofile%\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "%userprofile%\AppData\\Local\\Symbols\\src"
+      "%userprofile%\\AppData\\Local\\Symbols\\src"
     ]
   }
 }]]></component>
