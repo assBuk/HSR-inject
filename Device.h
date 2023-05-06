@@ -113,8 +113,8 @@ namespace Device
 			}
 			ImGui_ImplWin32_Init(hWnd);
 			ImGui_ImplDX11_Init(pDevice, pContext);
-			ImGui::GetIO().Fonts->AddFontFromFileTTF("c:\\windows\\fonts\\msyh.ttc", 16, NULL, ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
-			Cheat::Setup();
+			ImGui::GetIO().Fonts->AddFontFromFileTTF("c:\\windows\\fonts\\tahoma.ttf", 16, NULL, ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
+			DLC::Setup();
 			return true;
 		} ();
 		ImGui_ImplDX11_NewFrame();

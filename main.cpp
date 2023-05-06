@@ -77,7 +77,7 @@ void Setup()
 	else
 		puts("[+] Device hooks setup successfully!");
 
-	return Cheat::Main();
+	return DLC::Main();
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)

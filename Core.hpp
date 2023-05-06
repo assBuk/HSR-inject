@@ -42,5 +42,5 @@ inline WNDPROC oWndProc = NULL;
 inline HWND hWnd = NULL;
 
 #include "Utils.h"
-#include "Cheat.h"
+#include "DLC.h"
 #include "Device.h"
