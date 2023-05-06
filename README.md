@@ -1,4 +1,4 @@
-# Honkai: Star Rail Simple Game Cheat:
+# Honkai: Star Rail :
 This repository provides code for a simple cheat for the game Honkai Star Rail. For informational purposes only. Use at your own risk.
 
 # Instruction:
@@ -9,7 +9,7 @@ Step 1: Download the StarRail archive from releases.
 
 Step 2: Unzip the archive.
 
-Step 3: Run SRLauncher.exe. (on behalf of the administrator)
+Step 3: Run SR_injector.exe. (on behalf of the administrator)
 
 ![image](https://user-images.githubusercontent.com/113752393/236632832-a562508a-ad1d-4422-924b-445797288416.png)
 
