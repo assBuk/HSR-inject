@@ -1,6 +1,6 @@
 # Honkai: Star Rail Simple Game dlc:
 This repository provides code for a simple dlc for the game Honkai Star Rail. For informational purposes only. Use at your own risk.
-
+https://github.com/Z4ee/StarRail-S-GC
 
 This DLC version has performance and rendering issues, as well as problems with network connectivity. In my opinion, the author went too far.
 
