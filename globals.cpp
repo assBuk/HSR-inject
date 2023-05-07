@@ -1,7 +1,7 @@
 #include "globals.h"
 
 namespace globals {
-	bool ShowMenu = true;
+	bool ShowMenu = false;
 	bool Unload = false;
 	bool Init = false;
 }

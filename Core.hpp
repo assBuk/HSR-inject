@@ -18,7 +18,7 @@
 
 #include "Dependencies/Direct3D/Direct3D.h"
 
-//#include "Dependencies/Json/json.h"
+#include "dependencies/Json/json.hpp"
 
 #include <ImGui/imgui.h>
 #include <ImGui/backends/imgui_impl_dx11.h>
@@ -42,5 +42,5 @@ inline WNDPROC oWndProc = NULL;
 inline HWND hWnd = NULL;
 
 #include "Utils.h"
-#include "DLC.h"
+#include "Cheat.h"
 #include "Device.h"

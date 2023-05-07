@@ -1,8 +1,15 @@
-# Honkai: Star Rail Simple Game DLC:
+# Honkai: Star Rail Simple Game dlc:
+This repository provides code for a simple dlc for the game Honkai Star Rail. For informational purposes only. Use at your own risk.
 
 
-This repository provides code for a simple cheat for the game Honkai Star Rail. For informational purposes only. Use at your own risk.
-Orig Rep >> https://github.com/Z4ee/StarRail-S-GC
+This DLC version has performance and rendering issues, as well as problems with network connectivity. In my opinion, the author went too far.
+
+To use the old version, you can change the path in cfg.ini by specifying the path to Star-Rail-GC.dll:
+DllPath = C:\HSR-inject-main\HSR-injector\Star-Rail-GC.dll
+
+Or simply rename Star-Rail-GC.dll to ACE-DRV.dll.
+You can download the latest release at https://github.com/assBuk/HSR-inject/releases.
+
 # Instruction:
 
 Step 1: Download the StarRail archive from releases.
@@ -11,10 +18,9 @@ Step 1: Download the StarRail archive from releases.
 
 Step 2: Unzip the archive.
 
-Step 3: Run SRLauncher.exe/SR-Injector.exe. (on behalf of the administrator)
+Step 3: Run SRLauncher.exe. (on behalf of the administrator)
 
 ![image](https://user-images.githubusercontent.com/113752393/236632832-a562508a-ad1d-4422-924b-445797288416.png)
-![image](https://user-images.githubusercontent.com/107613675/236645583-6daad860-cd28-41e5-8882-7e60df49087f.png)
 
 Step 4: Select StarRail.exe.
 

@@ -1,31 +1,9 @@
 #pragma once
-namespace DLC
+
+#include "Config.h"
+
+namespace Cheat
 {
-	namespace world {
-		bool speed_hack = false;
-		float global_speed = 1.f;
-		float dialogue_speed = 1.f;
-
-		bool dump_enemys = false;
-		bool peeking = false;
-		bool auto_dialogue = false;
-		bool mouse_mode = false;
-		bool invisibility = false;
-	}
-
-	namespace battle {
-		bool speed_hack = false;
-		float battle_speed = 1.f;
-
-		bool auto_battle_unlock = false;
-		bool force_battle = false;
-	}
-
-	namespace other {
-		bool fps_unlock = false;
-		int fps = 60;
-	}
-
 	inline void Update()
 	{
 		if (!GlobalSetting::ShowMenu)
@@ -33,60 +11,62 @@ namespace DLC
 
 		static ImGuiWindowFlags classFinderWindowFlags = 0;
 
-		ImGui::Begin("HSR-GC", 0, classFinderWindowFlags);
+		ImGui::Begin("HSR-GC / Not optimized. Poor GUI implementation.", 0, classFinderWindowFlags);
 
 		ImGui::BeginTabBar("##tabs");
 
 		if (ImGui::BeginTabItem("World"))
 		{
-			ImGui::Checkbox("Speed Modifier", &world::speed_hack);
+			ImGui::Checkbox("Speed Modifier", &GlobalSetting::world::speed_hack);
 
-			if (world::speed_hack) {
-				ImGui::SliderFloat("Global", &world::global_speed, 0.1f, 10.f, "%.1f");
-				ImGui::SliderFloat("Dialogue", &world::dialogue_speed, 0.1f, 10.f, "%.1f");
+			if (GlobalSetting::world::speed_hack) {
+				ImGui::SliderFloat("Global", &GlobalSetting::world::global_speed, 0.1f, 10.f, "%.1f");
+				ImGui::SliderFloat("Dialogue", &GlobalSetting::world::dialogue_speed, 0.1f, 10.f, "%.1f");
 			}
 
-			ImGui::Checkbox("Peeking", &world::peeking);
+			ImGui::Checkbox("Peeking", &GlobalSetting::world::peeking);
 
-			ImGui::Checkbox("Auto-Dialogue", &world::auto_dialogue);
-			
+			ImGui::Checkbox("Auto-Dialogue", &GlobalSetting::world::auto_dialogue);
 
-			if (world::auto_dialogue) {
+
+			if (GlobalSetting::world::auto_dialogue) {
 				ImGui::Text("also works on hotkey (CAPSLOCK)");
-				ImGui::Checkbox("Mouse Mode", &world::mouse_mode);
+				ImGui::Checkbox("Mouse Mode", &GlobalSetting::world::mouse_mode);
 			}
 
-			ImGui::Checkbox("Invisibility", &world::invisibility);
+			ImGui::Checkbox("Invisibility", &GlobalSetting::world::invisibility);
 
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem("Battle"))
 		{
-			ImGui::Checkbox("Speed Modifier", &battle::speed_hack);
+			ImGui::Checkbox("Speed Modifier", &GlobalSetting::battle::speed_hack);
 
-			if (battle::speed_hack) {
+			if (GlobalSetting::battle::speed_hack) {
 
-				ImGui::SliderFloat("Battle", &battle::battle_speed, 0.1f, 100.f, "%.1f");
+				ImGui::SliderFloat("Battle", &GlobalSetting::battle::battle_speed, 0.1f, 100.f, "%.1f");
 
 			}
 
-			ImGui::Checkbox("Auto-Battle Unlock", &battle::auto_battle_unlock);
+			ImGui::Checkbox("Auto-Battle Unlock", &GlobalSetting::battle::auto_battle_unlock);
 
-			ImGui::Checkbox("Force Auto-Battle", &battle::force_battle);
+			ImGui::Checkbox("Force Auto-Battle", &GlobalSetting::battle::force_battle);
 
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem("Other"))
 		{
-			ImGui::Checkbox("FPS Unlock", &other::fps_unlock);
+			ImGui::Checkbox("FPS Unlock", &GlobalSetting::other::fps_unlock);
 
-			if (other::fps_unlock) {
+			if (GlobalSetting::other::fps_unlock) {
 
-				ImGui::InputInt("FPS", &other::fps);
+				ImGui::InputInt("FPS", &GlobalSetting::other::fps);
 
 			}
+
+			
 
 			ImGui::EndTabItem();
 		}
@@ -118,6 +98,10 @@ namespace DLC
 
 			if (ImGui::Button("Unload"))
 				GlobalSetting::Unload = true;
+
+			if (ImGui::Button("Save Config")) {
+				Config::SaveConfig();
+			}
 
 			ImGui::EndTabItem();
 		}
@@ -160,7 +144,7 @@ namespace DLC
 		__int64 __fastcall h_isautobattle(__int64 a1) {
 			auto ret = o_isautobattle(a1);
 
-			if (!ret && battle::force_battle) {
+			if (!ret && GlobalSetting::battle::force_battle) {
 				h_setautobattleflag(a1, 1);
 			}
 
@@ -221,7 +205,7 @@ namespace DLC
 
 		while (true)
 		{
-			if (hooks::game::phase == 12 && world::auto_dialogue && !GlobalSetting::ShowMenu) {
+			if (hooks::game::phase == 12 && GlobalSetting::world::auto_dialogue && !GlobalSetting::ShowMenu) {
 
 				// idk, but SendMessage not working ):
 				// SendMessageA(target_window, WM_KEYDOWN, VK_SPACE, 0); 
@@ -233,7 +217,7 @@ namespace DLC
 					Sleep(16);
 
 					if (GetForegroundWindow() == target_window) {
-						if (!world::mouse_mode) {
+						if (!GlobalSetting::world::mouse_mode) {
 							keybd_event(VK_SPACE, 0, 0, 0);
 							Sleep(20);
 							keybd_event(VK_SPACE, 0, KEYEVENTF_KEYUP, 0);
@@ -264,12 +248,12 @@ namespace DLC
 		while (true)
 		{
 			if (hooks::game::phase == 12) { // hooks::game::phase == WORLD
-				if (world::speed_hack) {
+				if (GlobalSetting::world::speed_hack) {
 					if (hooks::game::get_is_in_dialog() || GetAsyncKeyState(VK_CAPITAL)) {
-						Utils::Write<float>(Utils::Read<uint64_t>(unity_player + 0x1D21D78) + 0xFC, world::dialogue_speed);
+						Utils::Write<float>(Utils::Read<uint64_t>(unity_player + 0x1D21D78) + 0xFC, GlobalSetting::world::dialogue_speed);
 					}
 					else {
-						Utils::Write<float>(Utils::Read<uint64_t>(unity_player + 0x1D21D78) + 0xFC, world::global_speed);
+						Utils::Write<float>(Utils::Read<uint64_t>(unity_player + 0x1D21D78) + 0xFC, GlobalSetting::world::global_speed);
 						Utils::Write<float>(Utils::Read<uint64_t>(Utils::Read<uint64_t>(game_assembly + 0x8CAA6A0) + 0xC0) + 0x1DC, 1.f);
 					}
 
@@ -280,7 +264,7 @@ namespace DLC
 				}
 
 				/* (RPG.Client.BaseShaderPropertyTransition.SetElevationDitherAlphaValue ) */
-				if (world::peeking) {
+				if (GlobalSetting::world::peeking) {
 					Utils::Write<uint8_t>(game_assembly + 0x51292C0, 0xC3);
 				}
 				else {
@@ -288,7 +272,7 @@ namespace DLC
 				}
 
 				/* (RPG.GameCore.NPCComponent.set_AlertValue) */
-				if (world::invisibility) {
+				if (GlobalSetting::world::invisibility) {
 					Utils::Write<uint8_t>(game_assembly + 0x5800F40, 0xC3);
 				}
 				else {
@@ -297,15 +281,15 @@ namespace DLC
 			}
 
 			if (hooks::game::phase == 15) {
-				if (battle::speed_hack) {
-					Utils::Write<float>(Utils::Read<uint64_t>(Utils::Read<uint64_t>(game_assembly + 0x8CAA6A0) + 0xC0) + 0x1DC, battle::battle_speed);
+				if (GlobalSetting::battle::speed_hack) {
+					Utils::Write<float>(Utils::Read<uint64_t>(Utils::Read<uint64_t>(game_assembly + 0x8CAA6A0) + 0xC0) + 0x1DC, GlobalSetting::battle::battle_speed);
 				}
 				else {
 					Utils::Write<float>(Utils::Read<uint64_t>(Utils::Read<uint64_t>(game_assembly + 0x8CAA6A0) + 0xC0) + 0x1DC, 1.f);
 				}
 
 				/* (RPG.GameCore.BattleInstance.IsStageForbidAutoBattle) */
-				if (battle::auto_battle_unlock) {
+				if (GlobalSetting::battle::auto_battle_unlock) {
 					Utils::Write<uint32_t>(game_assembly + 0x5DA5F20, 0x90C3C031);
 				}
 				else {
@@ -313,9 +297,9 @@ namespace DLC
 				}
 			}
 
-			if (other::fps_unlock) {
-				if (other::fps > 59) {
-					Utils::Write<uint32_t>(unity_player + 0x1C4E000, other::fps);
+			if (GlobalSetting::other::fps_unlock) {
+				if (GlobalSetting::other::fps > 59) {
+					Utils::Write<uint32_t>(unity_player + 0x1C4E000, GlobalSetting::other::fps);
 				}
 			}
 		}
