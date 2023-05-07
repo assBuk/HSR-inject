@@ -10,7 +10,7 @@
 #include <chrono>
 #include <numeric>
 #include <cstddef>
-
+//amogus
 bool CDirect3D::Initialization()
 {
 	WNDCLASSEX windowClass;
