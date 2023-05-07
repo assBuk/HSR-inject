@@ -1,5 +1,5 @@
 #pragma once
-
+//unstable code
 #include "device.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND window, UINT message, WPARAM wideParam, LPARAM longParam);
@@ -20,6 +20,7 @@ namespace Device
 		{
 			globals::ShowMenu = !globals::ShowMenu;
 		}
+		//unload?? wtf
 		if (uMsg == WM_KEYUP && wParam == VK_F12)
 		{
 			globals::Unload = true;

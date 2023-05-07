@@ -98,7 +98,7 @@ namespace Cheat
 
 			if (ImGui::Button("Unload"))
 				GlobalSetting::Unload = true;
-
+//add save config
 			if (ImGui::Button("Save Config")) {
 				Config::SaveConfig();
 			}

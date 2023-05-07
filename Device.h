@@ -1,5 +1,5 @@
 #pragma once
-
+//
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND window, UINT message, WPARAM wideParam, LPARAM longParam);
 
 namespace Device
